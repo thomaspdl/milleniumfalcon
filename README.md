@@ -14,8 +14,12 @@ python3 webapp.py path-to-millenium-falcon.json path-to-empire.json
 
 ## Solution
 
+### Frontend
+
 We use Flask to create the web application part.
 
-The backend loads two .json file corresponding to the two input files.
+The code loads two .json file corresponding to the two input files.
 
 We assume the input data are in the right format (ie no missing entry, swapped inputs etc..)
+
+% ### Backend
