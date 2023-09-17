@@ -7,6 +7,7 @@ https://github.com/lioncowlionant/developer-test
 
 ## Invocation 
 
+We propose a solution using Python (and Flask).
 We give a sample invocation of the script below:
 ```
 python3 webapp.py path-to-millenium-falcon.json path-to-empire.json
@@ -22,7 +23,7 @@ The code loads two .json file corresponding to the two input files.
 
 We assume the input data are in the right format (ie no missing entry, swapped inputs etc..)
 
-### Backend
+### Principle of the solution 
 
 Define a directed graph within the possible planets
 
@@ -39,3 +40,8 @@ We then filter all the possible paths by Keeping those
 This gives us a set of possible paths, feasible paths.
 
 From those paths, we compute the chance of getting caught by bounty hunters, and pick the maximum chance over the different feasible paths.
+
+### Organisation of the solution
+
+- `webapp.py` contains the proper webapp
+- `utils.py`: contains all the auxiliary functions
