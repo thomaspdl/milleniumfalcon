@@ -20,12 +20,13 @@ args = parser.parse_args()
 def compute():
 
     # get two positional arguments
-    milleniumf_js = args.path1
-    empire_js = args.path2
+    milleniumf_path = args.path1
+    empire_path = args.path2
+
 
     # load json files
-    milleniumf = js.load(open(milleniumf_js))
-    empire = js.load(open(empire_js))
+    milleniumf = js.load(open(milleniumf_path))
+    empire = js.load(open(empire_path))
 
     # get db
     directory = os.path.dirname(milleniumf_js)

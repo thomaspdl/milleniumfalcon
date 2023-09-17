@@ -89,8 +89,8 @@ def augment_paths(path,nbstops):
 
 # compute the  chance that a  path will get intercepted 
 # arguments:
-def compute_chances(path,Times,Hunters):
-    positions_hunters = process_hunters(Hunters)
+def compute_chances(path,Times,hunters):
+    positions_hunters = process_hunters(hunters)
     positions_milleniumf = process_paths(path,Times)
     Ninter = len(positions_milleniumf.intersection(positions_hunters))
     chance = 100*(1 - 1/10*sum([(9/10)**i for i in range(Ninter)]))
@@ -98,10 +98,10 @@ def compute_chances(path,Times,Hunters):
     
 # compute the maximal chance that a list of path will get intercepted 
 # arguments:
-def compute_chances_all(path_relevant,Times,Hunters):
+def compute_chances_all(path_relevant,Times,hunters):
     if len(path_relevant) == 0:
         return 0
-    chances = [compute_chances(path,Times,Hunters) for path in path_relevant]
+    chances = [compute_chances(path,Times,hunters) for path in path_relevant]
     return int(max(chances))
     
 # check if a path satisfies the autonomy constraint
@@ -146,8 +146,7 @@ def augment_all_paths(paths_se,countdown,Times):
     return all_paths
 
 
-def compute_chance(df, countdown, autonomy, Hunters, departure, arrival):
-
+def compute_chance(df, countdown, autonomy, hunters, departure, arrival):
     # define graph of paths and travel times 
     G, Times = define_graph_times(df)
     # find all the possible paths between departure (Tatooine) and arrival (Endor)
@@ -161,6 +160,33 @@ def compute_chance(df, countdown, autonomy, Hunters, departure, arrival):
     # 2) autonomy constraint respected
     path_relevant = [path for path in  all_paths_unique if compute_time(path,Times) <= countdown and check_autonomy(path,autonomy,Times)]
     # get the final chance
-    result = compute_chances_all(path_relevant,Times,Hunters)
-
+    result = compute_chances_all(path_relevant,Times,hunters)
     return result
+
+def get_parameters(milleniumf_path, empire_path):
+
+    # load json files
+    milleniumf = js.load(open(milleniumf_path))
+    empire = js.load(open(empire_path))
+
+    # get db
+    directory = os.path.dirname(milleniumf_js)
+    dbfile = directory + '/' + milleniumf['routes_db']
+
+    # Create a SQL connection to our SQLite database
+    con = sqlite3.connect(dbfile)
+    cursor = con.cursor()
+    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+    # load into pandas df
+    df = pd.read_sql_query("SELECT * from routes", con)
+    # close connection
+    con.close()
+
+    # get parameters 
+    countdown = empire['countdown']
+    autonomy = milleniumf['autonomy']
+    hunters = empire['bounty_hunters']
+    departure = milleniumf['departure']
+    arrival = milleniumf['arrival']
+
+    return df, countdown, autonomy, hunters, departure, arrival
