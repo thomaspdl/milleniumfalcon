@@ -43,12 +43,12 @@ def compute():
     # get parameters 
     countdown = empire['countdown']
     autonomy = milleniumf['autonomy']
-    Hunters = empire['bounty_hunters']
+    hunters = empire['bounty_hunters']
     departure = milleniumf['departure']
     arrival = milleniumf['arrival']
 
     # compute result
-    result = compute_chance(df, countdown, autonomy, Hunters, departure, arrival)
+    result = compute_chance(df, countdown, autonomy, hunters, departure, arrival)
 
     #print result
     print(f"{result}")
