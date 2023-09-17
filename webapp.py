@@ -5,8 +5,8 @@ import json as js
 import sqlite3
 import os
 
-from utils import find_paths, compute_time, process_hunters, process_paths, augment_paths, compute_chances, \
-    compute_chances_all, check_autonomy, define_graph_times, augment_all_paths, compute_chance, get_parameters
+from utils import find_paths, compute_time, process_hunters, process_paths, augment_paths, compute_chances, compute_chances_all,\
+      check_autonomy, define_graph_times, augment_all_paths, compute_chance, get_parameters, main_utils
 
 app = Flask(__name__)
 
@@ -19,12 +19,9 @@ args = parser.parse_args()
 @app.route('/')
 def compute():
     # get two positional arguments
-    milleniumf_path = args.path1
-    empire_path = args.path2
-    # get data
-    df, countdown, autonomy, hunters, departure, arrival = get_parameters(milleniumf_path, empire_path)
+    milleniumf_path, empire_path = args.path1, args.path2
     # compute result
-    result = compute_chance(df, countdown, autonomy, hunters, departure, arrival)
+    result = main_utils(milleniumf_path, empire_path)
     #print result
     print(f"{result}")
     #return result in web browser

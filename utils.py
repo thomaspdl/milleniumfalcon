@@ -185,3 +185,10 @@ def get_parameters(milleniumf_path, empire_path):
     departure = milleniumf['departure']
     arrival = milleniumf['arrival']
     return df, countdown, autonomy, hunters, departure, arrival
+
+def main_utils(milleniumf_path, empire_path):
+    # get data
+    df, countdown, autonomy, hunters, departure, arrival = get_parameters(milleniumf_path, empire_path)
+    # compute result
+    result = compute_chance(df, countdown, autonomy, hunters, departure, arrival)
+    return result 
