@@ -164,15 +164,12 @@ def compute_chance(df, countdown, autonomy, hunters, departure, arrival):
     return result
 
 def get_parameters(milleniumf_path, empire_path):
-
     # load json files
     milleniumf = js.load(open(milleniumf_path))
     empire = js.load(open(empire_path))
-
     # get db
-    directory = os.path.dirname(milleniumf_js)
+    directory = os.path.dirname(milleniumf_path)
     dbfile = directory + '/' + milleniumf['routes_db']
-
     # Create a SQL connection to our SQLite database
     con = sqlite3.connect(dbfile)
     cursor = con.cursor()
@@ -181,12 +178,10 @@ def get_parameters(milleniumf_path, empire_path):
     df = pd.read_sql_query("SELECT * from routes", con)
     # close connection
     con.close()
-
     # get parameters 
     countdown = empire['countdown']
     autonomy = milleniumf['autonomy']
     hunters = empire['bounty_hunters']
     departure = milleniumf['departure']
     arrival = milleniumf['arrival']
-
     return df, countdown, autonomy, hunters, departure, arrival

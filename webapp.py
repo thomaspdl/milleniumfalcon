@@ -6,7 +6,7 @@ import sqlite3
 import os
 
 from utils import find_paths, compute_time, process_hunters, process_paths, augment_paths, compute_chances, \
-    compute_chances_all, check_autonomy, define_graph_times, augment_all_paths, compute_chance
+    compute_chances_all, check_autonomy, define_graph_times, augment_all_paths, compute_chance, get_parameters
 
 app = Flask(__name__)
 
@@ -18,42 +18,15 @@ args = parser.parse_args()
 
 @app.route('/')
 def compute():
-
     # get two positional arguments
     milleniumf_path = args.path1
     empire_path = args.path2
-
-
-    # load json files
-    milleniumf = js.load(open(milleniumf_path))
-    empire = js.load(open(empire_path))
-
-    # get db
-    directory = os.path.dirname(milleniumf_js)
-    dbfile = directory + '/' + milleniumf['routes_db']
-
-    # Create a SQL connection to our SQLite database
-    con = sqlite3.connect(dbfile)
-    cursor = con.cursor()
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    # load into pandas df
-    df = pd.read_sql_query("SELECT * from routes", con)
-    # close connection
-    con.close()
-
-    # get parameters 
-    countdown = empire['countdown']
-    autonomy = milleniumf['autonomy']
-    hunters = empire['bounty_hunters']
-    departure = milleniumf['departure']
-    arrival = milleniumf['arrival']
-
+    # get data
+    df, countdown, autonomy, hunters, departure, arrival = get_parameters(milleniumf_path, empire_path)
     # compute result
     result = compute_chance(df, countdown, autonomy, hunters, departure, arrival)
-
     #print result
     print(f"{result}")
-
     #return result in web browser
     return f"Result of computation: {result}"
 
