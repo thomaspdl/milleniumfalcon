@@ -33,7 +33,7 @@ We then “augment” the obtained paths by adding all the possible stops.
 We then filter all the possible paths by Keeping those
 
 1. With total travel time below the  countdown value
-2. 
+   
 3. Where the millenium falcon does not run out out of fuel
 
 This gives us a set of possible paths, feasible paths.
