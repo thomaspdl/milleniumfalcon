@@ -6,7 +6,7 @@ import sqlite3
 import os
 
 from utils import find_paths, compute_time, process_hunters, process_paths, augment_paths, compute_chances, \
-    compute_chances_all, check_autonomy, define_graph_times, augment_all_paths
+    compute_chances_all, check_autonomy, define_graph_times, augment_all_paths, compute_chance
 
 app = Flask(__name__)
 
@@ -47,29 +47,13 @@ def compute():
     departure = milleniumf['departure']
     arrival = milleniumf['arrival']
 
-    # define graph of paths and travel times 
-    G, Times = define_graph_times(df)
+    # compute result
+    result = compute_chance(df, countdown, autonomy, Hunters, departure, arrival)
 
-    # find all the possible paths between departure (Tatooine) and arrival (Endor)
-    paths = find_paths(G, departure, arrival, path=[])
-
-    # add all the potential stops to the existing paths
-    all_paths = augment_all_paths(paths,countdown,Times)
-
-    # keep the unique paths only 
-    all_paths_unique = [list(x) for x in set(tuple(x) for x in all_paths)]
-
-    # get the paths with 
-    # 1) travel time lower than countdown 
-    # 2) autonomy constraint respected
-    path_relevant = [path for path in  all_paths_unique if compute_time(path,Times) <= countdown and check_autonomy(path,autonomy,Times)]
-
-    # get the final chance
-    result = compute_chances_all(path_relevant,Times,Hunters)
-
-    #return results
+    #print result
     print(f"{result}")
 
+    #return result in web browser
     return f"Result of computation: {result}"
 
 if __name__ == '__main__':

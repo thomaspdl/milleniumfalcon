@@ -144,3 +144,23 @@ def augment_all_paths(paths_se,countdown,Times):
         added = augment_paths(path,nbstops)
         all_paths += added
     return all_paths
+
+
+def compute_chance(df, countdown, autonomy, Hunters, departure, arrival):
+
+    # define graph of paths and travel times 
+    G, Times = define_graph_times(df)
+    # find all the possible paths between departure (Tatooine) and arrival (Endor)
+    paths = find_paths(G, departure, arrival, path=[])
+    # add all the potential stops to the existing paths
+    all_paths = augment_all_paths(paths,countdown,Times)
+    # keep the unique paths only 
+    all_paths_unique = [list(x) for x in set(tuple(x) for x in all_paths)]
+    # get the paths with 
+    # 1) travel time lower than countdown 
+    # 2) autonomy constraint respected
+    path_relevant = [path for path in  all_paths_unique if compute_time(path,Times) <= countdown and check_autonomy(path,autonomy,Times)]
+    # get the final chance
+    result = compute_chances_all(path_relevant,Times,Hunters)
+
+    return result
