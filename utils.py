@@ -11,7 +11,9 @@ import os
 #  - G: adjacency dictionnary 
 #  - s: starting point (element of G) 
 #  - e: end point (arrival element of G)
-def find_paths(G, s, e, path=[]):
+def find_paths(G, s, e, path=None):
+    if path is None:
+        path = []
     path = path + [s]
     if s == e:
         return [path]
@@ -23,6 +25,8 @@ def find_paths(G, s, e, path=[]):
             new_paths = find_paths(G, neighbor, e, path)
             for new_path in new_paths:
                 paths.append(new_path)
+        elif neighbor == e and len(path) > 2:  # Handle loops (cycles)
+            paths.append(path + [e])
     return paths
 
 # compute the travel time for a path
